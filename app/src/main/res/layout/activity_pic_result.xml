@@ -6,17 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PicResultActivity">
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="@string/result_title"
-        android:textSize="15sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <FrameLayout
         android:id="@+id/id_card_front_side"
@@ -26,14 +15,13 @@
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title">
+        app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
             android:id="@+id/radio_front"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:text="@string/radio_front" />
+            android:layout_gravity="start|center_vertical" />
 
         <ImageView
             android:id="@+id/img_front"
@@ -52,28 +40,30 @@
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/id_card_front_side">
 
         <RadioButton
             android:id="@+id/radio_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:text="@string/radio_front" />
+            android:layout_gravity="start|center_vertical" />
 
         <ImageView
             android:id="@+id/img_back"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="40dp"
-            />
+            android:layout_margin="40dp" />
     </FrameLayout>
+
     <Button
         android:id="@+id/use_pic"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="20dp"
+        android:background="@android:color/holo_red_light"
         android:text="@string/use_pic"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/id_card_back_side" />
@@ -83,7 +73,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="20dp"
+        android:background="@android:color/holo_red_light"
         android:text="@string/take_pic_again"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/use_pic" />

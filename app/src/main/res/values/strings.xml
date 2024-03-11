@@ -7,4 +7,6 @@
     <string name="radio_front">正面</string>
     <string name="use_pic">使用该图</string>
     <string name="take_pic_again">重新拍摄</string>
+    <string name="navigation_back">返回</string>
+    <string name="take_pic">拍照</string>
 </resources>

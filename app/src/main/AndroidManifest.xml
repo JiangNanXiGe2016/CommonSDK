@@ -18,6 +18,9 @@
         android:theme="@style/Theme.CommondSDK"
         tools:targetApi="31">
         <activity
+            android:name=".BaseActionBarActivity"
+            android:exported="false" />
+        <activity
             android:name=".PicResultActivity"
             android:exported="false" />
         <activity

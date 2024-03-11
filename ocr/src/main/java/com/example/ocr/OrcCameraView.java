@@ -74,8 +74,9 @@ public class OrcCameraView extends TextureView {
     }
 
     // 执行拍照动作
-    public void takePicture() {
+    public void takePicture(PictureTakeCallBack callBack) {
         Log.d(TAG, "正在拍照");
+        this.callBack = callBack;
         mTakeType = 0;
         try {
             CaptureRequest.Builder builder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
@@ -175,11 +176,11 @@ public class OrcCameraView extends TextureView {
                 Log.i(TAG, "不建议使用");
             }
             StreamConfigurationMap map = cc.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            Size[] sizes = map.getOutputSizes(ImageFormat.YUV_420_888);
+            Size[] sizes = map.getOutputSizes(ImageFormat.JPEG);
 
             Log.i("yangliang", "sizes=" + Arrays.toString(sizes));
 
-            Size largest = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.YUV_420_888)), new CompareSizeByArea());
+            Size largest = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new CompareSizeByArea());
             Log.i("yangliang", "largest =" + largest.toString());
             Log.i("yangliang", "largest  w=" + largest.getWidth());
             Log.i("yangliang", "largest  h=" + largest.getHeight());
@@ -187,16 +188,16 @@ public class OrcCameraView extends TextureView {
 
             float originalW = ScreenUtil.getScreenWidthPixels(getContext());
             Log.i("yangliang", "originalW=" + originalW);
-            float originalH = ScreenUtil.getScreenHeightPixels(getContext()) ;
+            float originalH = ScreenUtil.getScreenHeightPixels(getContext());
             Log.i("yangliang", "originalH=" + originalH);
             // 获取预览画面的尺寸
             mPreViewSize = map.getOutputSizes(SurfaceTexture.class)[0];
             BigDecimal decimal = new BigDecimal(mPreViewSize.getWidth()).multiply(new BigDecimal(1.5));
 //            //按照比例对预览帧裁剪
-          //  rect = new Rect(0, 0, 2500, 4700);
+            //  rect = new Rect(0, 0, 2500, 4700);
 
             // 创建一个JPEG格式的图像读取器
-            mImageReader = ImageReader.newInstance(mPreViewSize.getWidth(), mPreViewSize.getHeight(), ImageFormat.YUV_420_888, 10);
+            mImageReader = ImageReader.newInstance(mPreViewSize.getWidth(), mPreViewSize.getHeight(), ImageFormat.JPEG, 10);
 
             // mImageReader = ImageReader.newInstance(640, 480, ImageFormat.YUV_420_888, 10);
 
@@ -273,7 +274,7 @@ public class OrcCameraView extends TextureView {
             mPreviewBuilder.set(CaptureRequest.JPEG_ORIENTATION, (mCameraType == CameraCharacteristics.LENS_FACING_FRONT) ? 90 : 270);
 
             //设置裁剪
-          // mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, rect);
+            // mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, rect);
             // 创建一个相片捕获会话。此时预览画面显示在纹理视图上
             mCameraDevice.createCaptureSession(Arrays.asList(surface, mImageReader.getSurface()), mSessionStateCallback, mHandler);
         } catch (CameraAccessException e) {
@@ -325,8 +326,16 @@ public class OrcCameraView extends TextureView {
         @Override
         public void onImageAvailable(ImageReader imageReader) {
             Log.d(TAG, "onImageAvailable");
+            if (callBack != null) {
+                callBack.onTakePic(imageReader.acquireNextImage());
+            }
         }
     };
+    PictureTakeCallBack callBack;
+
+    public static interface PictureTakeCallBack {
+        void onTakePic(Image image);
+    }
 
 
     private static class CompareSizeByArea implements java.util.Comparator<Size> {

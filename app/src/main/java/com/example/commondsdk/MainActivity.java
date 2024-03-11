@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.commondsdk.databinding.ActivityMainBinding;
 import com.example.ocr.Permission;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActionBarActivity {
     private String TAG = "yangiang";
     private ActivityMainBinding mainBinding;
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.quiteApp.setOnClickListener((v) -> {
             startOrcResult();
         });
-
+        setActionBarTitle("身份证件照");
     }
 
     @Override
