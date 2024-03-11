@@ -9,6 +9,14 @@
 
     <com.example.ocr.OrcCameraView
         android:id="@+id/ocr_camera_view"
+        android:layout_width="640dp"
+        android:layout_height="853dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.ocr.DashedRectangleView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,10 +24,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
 
-    <com.example.ocr.DashedRectangleView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

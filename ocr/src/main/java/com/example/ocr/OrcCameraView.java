@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
@@ -14,6 +15,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.icu.math.BigDecimal;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Handler;
@@ -86,7 +88,10 @@ public class OrcCameraView extends TextureView {
             // 开始对焦
             builder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
             // 设置照片的方向
-            builder.set(CaptureRequest.JPEG_ORIENTATION, (mCameraType == CameraCharacteristics.LENS_FACING_FRONT) ? 90 : 270);
+//            builder.set(CaptureRequest.JPEG_ORIENTATION, (mCameraType == CameraCharacteristics.LENS_FACING_FRONT) ? 90 : 270);
+            builder.set(CaptureRequest.JPEG_ORIENTATION, 0);
+
+
             // 拍照会话开始捕获相片
             mCameraSession.capture(builder.build(), null, mHandler);
         } catch (CameraAccessException e) {
@@ -147,6 +152,8 @@ public class OrcCameraView extends TextureView {
         }
     };
 
+    Rect rect;
+
     // 打开相机
     private void openCamera() {
         // 从系统服务中获取相机管理器
@@ -168,11 +175,32 @@ public class OrcCameraView extends TextureView {
                 Log.i(TAG, "不建议使用");
             }
             StreamConfigurationMap map = cc.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            Size largest = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new CompareSizeByArea());
+            Size[] sizes = map.getOutputSizes(ImageFormat.YUV_420_888);
+
+            Log.i("yangliang", "sizes=" + Arrays.toString(sizes));
+
+            Size largest = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.YUV_420_888)), new CompareSizeByArea());
+            Log.i("yangliang", "largest =" + largest.toString());
+            Log.i("yangliang", "largest  w=" + largest.getWidth());
+            Log.i("yangliang", "largest  h=" + largest.getHeight());
+
+
+            float originalW = ScreenUtil.getScreenWidthPixels(getContext());
+            Log.i("yangliang", "originalW=" + originalW);
+            float originalH = ScreenUtil.getScreenHeightPixels(getContext()) ;
+            Log.i("yangliang", "originalH=" + originalH);
             // 获取预览画面的尺寸
             mPreViewSize = map.getOutputSizes(SurfaceTexture.class)[0];
+            BigDecimal decimal = new BigDecimal(mPreViewSize.getWidth()).multiply(new BigDecimal(1.5));
+//            //按照比例对预览帧裁剪
+          //  rect = new Rect(0, 0, 2500, 4700);
+
             // 创建一个JPEG格式的图像读取器
-            mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(), ImageFormat.JPEG, 10);
+            mImageReader = ImageReader.newInstance(mPreViewSize.getWidth(), mPreViewSize.getHeight(), ImageFormat.YUV_420_888, 10);
+
+            // mImageReader = ImageReader.newInstance(640, 480, ImageFormat.YUV_420_888, 10);
+
+            Log.i("yangliang", "mPreViewSize  w h=" + mPreViewSize.getWidth() + " " + mPreViewSize.getHeight());
             // 设置图像读取器的图像可用监听器，一旦捕捉到图像数据就会触发监听器的onImageAvailable方法
             mImageReader.setOnImageAvailableListener(onImageAvaiableListener, mHandler);
             if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -238,11 +266,14 @@ public class OrcCameraView extends TextureView {
             // 设置自动对焦模式
             mPreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
             // 设置自动曝光模式
-            mPreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+            // mPreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
             // 开始对焦
             mPreviewBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
             // 设置照片的方向
             mPreviewBuilder.set(CaptureRequest.JPEG_ORIENTATION, (mCameraType == CameraCharacteristics.LENS_FACING_FRONT) ? 90 : 270);
+
+            //设置裁剪
+          // mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, rect);
             // 创建一个相片捕获会话。此时预览画面显示在纹理视图上
             mCameraDevice.createCaptureSession(Arrays.asList(surface, mImageReader.getSurface()), mSessionStateCallback, mHandler);
         } catch (CameraAccessException e) {
@@ -270,7 +301,6 @@ public class OrcCameraView extends TextureView {
             mCameraDevice = null;
         }
     };
-
     // 影像配置就绪后，将预览画面呈现到手机屏幕上
     private CameraCaptureSession.StateCallback mSessionStateCallback = new CameraCaptureSession.StateCallback() {
         @Override
