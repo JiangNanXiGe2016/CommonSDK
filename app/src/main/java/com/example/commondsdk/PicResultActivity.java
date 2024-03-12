@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.Manifest;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,8 +34,8 @@ public class PicResultActivity extends BaseActionBarActivity {
         // EdgeToEdge.enable(this);
         picResultBinding = ActivityPicResultBinding.inflate(getLayoutInflater());
         setContentView(picResultBinding.getRoot());
-        setActionBarTitle("证件照结果页");
-        showNavigation(true);
+        setActionBarTitle(getString(R.string.act_result_title));
+        showNavigation(false);
         setUpView();
     }
 
@@ -57,6 +58,8 @@ public class PicResultActivity extends BaseActionBarActivity {
             // 被选择的一个图片重新拍摄
             takeImageAgain();
         });
+        picResultBinding.quiteApp.setOnClickListener(v -> finish());
+
     }
 
     private void takeImageAgain() {
@@ -125,6 +128,5 @@ public class PicResultActivity extends BaseActionBarActivity {
             }
         }
     }
-
 
 }

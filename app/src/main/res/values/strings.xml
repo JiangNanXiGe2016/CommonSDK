@@ -4,6 +4,12 @@
     <string name="start_take_pic">开始拍摄身份证</string>
     <string name="main_title">Orc身份证识别</string>
     <string name="result_title">身份证</string>
+
+    <string name="act_result_title">"证件识别结果"</string>
+
+    <string name="act_main_title">"身份证件照"</string>
+
+
     <string name="radio_front">正面</string>
     <string name="use_pic">使用该图</string>
     <string name="take_pic_again">重新拍摄</string>

@@ -42,7 +42,7 @@ public class MainActivity extends BaseActionBarActivity {
         mainBinding.quiteApp.setOnClickListener((v) -> {
             finish();
         });
-        setActionBarTitle("身份证件照");
+        setActionBarTitle(getString(R.string.act_main_title));
     }
 
     @Override
@@ -59,16 +59,16 @@ public class MainActivity extends BaseActionBarActivity {
             Log.i(TAG, "未请求成功");
             return;
         }
-        Bundle  bundle=new Bundle();
-        Object step=SPUtils.get(getApplicationContext(),Constant.IMAGE_OCR_STEP,-1);
-        if(step ==null||(int)step!=-1){
-            bundle.putInt(Constant.IMAGE_OCR_STEP,Constant.STEP_FRONT_SIDE);
+        Bundle bundle = new Bundle();
+        Object step = SPUtils.get(getApplicationContext(), Constant.IMAGE_OCR_STEP, -1);
+        if (step == null || (int) step != -1) {
+            bundle.putInt(Constant.IMAGE_OCR_STEP, Constant.STEP_FRONT_SIDE);
         }
         //清除本地保存的
         //打开相机预览
         Intent intent = new Intent(getApplicationContext(), OcrCameraPreviewActivity.class);
-        bundle.putInt(Constant.IMAGE_OCR_STEP,Constant.STEP_FRONT_SIDE);
-        intent.putExtra(Constant.BUNDLE_PARAMS,bundle);
+        bundle.putInt(Constant.IMAGE_OCR_STEP, Constant.STEP_FRONT_SIDE);
+        intent.putExtra(Constant.BUNDLE_PARAMS, bundle);
         startActivity(intent);
     }
 }

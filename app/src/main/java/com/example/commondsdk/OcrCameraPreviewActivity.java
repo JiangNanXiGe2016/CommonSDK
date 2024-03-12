@@ -54,6 +54,8 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
             previewBinding.hintTv.setText(backText);
         }
         previewBinding.ocrCameraView.enableOnFrame(true);
+
+        // 相机出帧回调
         previewBinding.ocrCameraView.addFrameListener(new OrcCameraView.OnFrameListener() {
             @Override
             public void onFrame(ImageReader imageReader) {
@@ -91,7 +93,7 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
     private boolean isPerfect(int type, byte[] image, int imgW, int imgH) {
         Random random = new Random();
         int ret = random.nextInt(1000);
-        return ret % 5 == 0;
+        return ret % 19 == 0;
     }
 
 

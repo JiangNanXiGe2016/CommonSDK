@@ -35,7 +35,7 @@ public class BaseActionBarActivity extends AppCompatActivity {
 
     void showNavigation(boolean show) {
         actionBar.setHomeButtonEnabled(show);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(show);
     }
 
     @Override
