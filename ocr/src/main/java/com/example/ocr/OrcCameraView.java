@@ -18,8 +18,11 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.icu.math.BigDecimal;
 import android.media.Image;
 import android.media.ImageReader;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Size;
@@ -27,12 +30,15 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class OrcCameraView extends TextureView {
     private static final String TAG = "OrcCameraView";
@@ -66,11 +72,8 @@ public class OrcCameraView extends TextureView {
         setSurfaceTextureListener(mSurfacetextlistener);
     }
 
-    private String mPhotoPath; // 照片的保存路径
-
-    // 获取照片的保存路径
-    public String getPhotoPath() {
-        return mPhotoPath;
+    public void addFrameListener(OnFrameListener listener) {
+        this.onFrameListener = listener;
     }
 
     // 执行拍照动作
@@ -142,7 +145,6 @@ public class OrcCameraView extends TextureView {
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
-        Toast.makeText(mContext, "已完成连拍，按返回键回到上页查看照片。", Toast.LENGTH_SHORT).show();
     }
 
     // 定义一个拍摄停止任务
@@ -201,9 +203,10 @@ public class OrcCameraView extends TextureView {
 
             // mImageReader = ImageReader.newInstance(640, 480, ImageFormat.YUV_420_888, 10);
 
+
             Log.i("yangliang", "mPreViewSize  w h=" + mPreViewSize.getWidth() + " " + mPreViewSize.getHeight());
             // 设置图像读取器的图像可用监听器，一旦捕捉到图像数据就会触发监听器的onImageAvailable方法
-            mImageReader.setOnImageAvailableListener(onImageAvaiableListener, mHandler);
+            mImageReader.setOnImageAvailableListener(onImageAvaiableListener, null);
             if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 // 开启摄像头
                 cm.openCamera(cameraid, mDeviceStateCallback, mHandler);
@@ -264,6 +267,8 @@ public class OrcCameraView extends TextureView {
             mPreviewBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             // 把纹理视图添加到预览目标
             mPreviewBuilder.addTarget(surface);
+
+            mPreviewBuilder.addTarget(mImageReader.getSurface());
             // 设置自动对焦模式
             mPreviewBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
             // 设置自动曝光模式
@@ -326,15 +331,26 @@ public class OrcCameraView extends TextureView {
         @Override
         public void onImageAvailable(ImageReader imageReader) {
             Log.d(TAG, "onImageAvailable");
-            if (callBack != null) {
-                callBack.onTakePic(imageReader.acquireNextImage());
+            if (callBack != null && mCameraDevice != null) {
+                callBack.onTakePic(imageReader);
+            }
+            // onFrame, data  dependency  ImageReader.Format
+            if (onFrameListener != null && mCameraDevice != null) {
+                onFrameListener.onFrame(imageReader);
             }
         }
     };
-    PictureTakeCallBack callBack;
 
-    public static interface PictureTakeCallBack {
-        void onTakePic(Image image);
+
+    PictureTakeCallBack callBack;
+    OnFrameListener onFrameListener;
+
+    public interface OnFrameListener {
+        void onFrame(ImageReader imageReader);
+    }
+
+    public interface PictureTakeCallBack {
+        void onTakePic(ImageReader imageReader);
     }
 
 

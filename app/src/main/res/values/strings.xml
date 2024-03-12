@@ -10,4 +10,7 @@
     <string name="navigation_back">返回</string>
     <string name="take_pic">拍照</string>
     <string name="preview_images">预览</string>
+    <string name="id_card_front_text">"请将身份证人像面影像保持\n在虚线框中，注意不要遮挡"</string>
+    <string name="id_card_back_text">"请将身份证国徽面影像保持\n在虚线框中，注意不要遮挡"</string>
+
 </resources>

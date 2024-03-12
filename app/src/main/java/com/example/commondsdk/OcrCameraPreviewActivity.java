@@ -2,6 +2,7 @@ package com.example.commondsdk;
 
 import android.hardware.camera2.CameraCharacteristics;
 import android.media.Image;
+import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +12,7 @@ import com.example.commondsdk.databinding.ActivityOcrCameraPreviewBinding;
 import com.example.ocr.OrcCameraView;
 import com.example.ocr.SoundUtil;
 
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -31,27 +33,32 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
             SoundUtil.shootSound(getApplicationContext());
             previewBinding.ocrCameraView.takePicture(new OrcCameraView.PictureTakeCallBack() {
                 @Override
-                public void onTakePic(Image image) {
-                    ImageFileUtil.saveImage(image, url);
+                public void onTakePic(ImageReader imageReader) {
+                    ImageFileUtil.saveImage(imageReader.acquireLatestImage(), url);
                     handler.postDelayed(() -> {
                         previewBinding.ocrCameraView.closeCamera();
                         Bundle bundle = new Bundle();
-
-                        boolean isFrontSide=cardFrontSideRandom();
-                        if(isFrontSide){
-                            bundle.putString(Constant.IMAGE__FRONT_URL, url);
-                        }else {
-                            bundle.putString(Constant.IMAGE__BACK_URL, url);
-                        }
+                        bundle.putString(Constant.IMAGE_URL, url);
                         jump(PicResultActivity.class, bundle);
                         finish();
                     }, 1000);
                 }
             });
-
         });
         previewBinding.navigationBack.setOnClickListener((v) -> {
             finish();
+        });
+        String frontText = getString(R.string.id_card_front_text);
+        String backText = getString(R.string.id_card_back_text);
+        previewBinding.ocrCameraView.addFrameListener(new OrcCameraView.OnFrameListener() {
+            @Override
+            public void onFrame(ImageReader imageReader) {
+                Image image = imageReader.acquireLatestImage();
+                Log.d(TAG, "onCameraFrame:" + image);
+                if (image != null) {
+                    image.close();
+                }
+            }
         });
     }
 

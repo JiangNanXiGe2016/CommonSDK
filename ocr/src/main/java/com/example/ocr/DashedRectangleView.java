@@ -8,6 +8,8 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +20,9 @@ public class DashedRectangleView extends View {
     private Paint fillPaint;
     private Paint maskPaint;
 
-    private Paint testPaint;
+    private Paint textPaint;
+
+    private String text;
 
     public DashedRectangleView(Context context) {
         super(context);
@@ -51,8 +55,10 @@ public class DashedRectangleView extends View {
         maskPaint.setColor(Color.argb(128, 255, 255, 255));
 
 
-        testPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        testPaint.setColor(Color.GREEN);
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.GREEN);
+        textPaint.setStyle(Paint.Style.FILL);
+        textPaint.setTextSize(20);
     }
 
     @Override
@@ -81,5 +87,14 @@ public class DashedRectangleView extends View {
         int inset = 5; // 内部高亮缩小的像素值
         canvas.drawRect(start + inset, top + inset, end - inset, bottom - inset, fillPaint);
 
+//        if (TextUtils.isEmpty(text)) {
+//            return;
+//        }
+        //canvas.drawText("xxxxxxxxx", 0, 0, textPaint);
+    }
+
+    public void drawText(String text) {
+        this.text = text;
+        postInvalidate();
     }
 }

@@ -16,13 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <RadioButton
-            android:id="@+id/radio_front"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical" />
-
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,38 +33,6 @@
         </androidx.cardview.widget.CardView>
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/id_card_back_side"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id_card_front_side">
-
-        <RadioButton
-            android:id="@+id/radio_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical" />
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            app:cardCornerRadius="5dp">
-
-            <ImageView
-                android:id="@+id/img_back"
-                android:layout_width="280dp"
-                android:layout_height="175dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/back_side" />
-        </androidx.cardview.widget.CardView>
-
-    </FrameLayout>
-
     <Button
         android:id="@+id/use_pic"
         android:layout_width="match_parent"
@@ -82,7 +43,7 @@
         android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id_card_back_side" />
+        app:layout_constraintTop_toBottomOf="@id/id_card_front_side" />
 
     <Button
         android:id="@+id/take_pic_again"

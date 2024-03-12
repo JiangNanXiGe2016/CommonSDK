@@ -16,7 +16,7 @@ import com.example.commondsdk.databinding.ActivityMainBinding;
 import com.example.ocr.Permission;
 
 public class MainActivity extends BaseActionBarActivity {
-    private String TAG = "yangiang";
+    private String TAG = Constant.TAG;
     private ActivityMainBinding mainBinding;
 
     @Override
@@ -39,11 +39,8 @@ public class MainActivity extends BaseActionBarActivity {
         mainBinding.startTake.setOnClickListener((v) -> {
             startOrc();
         });
-        mainBinding.previewImages.setOnClickListener((view)->{
-            jump(PicResultActivity.class,null);
-        });
         mainBinding.quiteApp.setOnClickListener((v) -> {
-            startOrcResult();
+            finish();
         });
         setActionBarTitle("身份证件照");
     }
@@ -59,19 +56,12 @@ public class MainActivity extends BaseActionBarActivity {
     //打开预览界面
     private void startOrc() {
         if (!Permission.isPermissionGranted(this)) {
-            Log.i("TAG", "未请求成功");
+            Log.i(TAG, "未请求成功");
             return;
         }
+        //清除本地保存的
+        //打开相机预览
         Intent intent = new Intent(getApplicationContext(), OcrCameraPreviewActivity.class);
-        startActivity(intent);
-    }
-
-    private void startOrcResult() {
-        if (!Permission.isPermissionGranted(this)) {
-            Log.i("TAG", "未请求成功");
-            return;
-        }
-        Intent intent = new Intent(getApplicationContext(), PicResultActivity.class);
         startActivity(intent);
     }
 }

@@ -35,6 +35,15 @@ public class ImageFileUtil {
         return fileName;
     }
 
+
+    public static void clearImageCache() {
+        String path = Environment.getExternalStorageDirectory() + "/DCIM/OcrCamera/";
+        File mImageFile = new File(path);
+        if (mImageFile.exists()) {
+            mImageFile.delete();
+        }
+    }
+
     private static void writeImage(Image mImage, String fileName) {
         ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
         byte[] data = new byte[buffer.capacity()];
@@ -58,5 +67,7 @@ public class ImageFileUtil {
         }
 
     }
+
+
 }
 
