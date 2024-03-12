@@ -3,6 +3,7 @@ package com.example.commondsdk;
 import android.media.Image;
 import android.os.Environment;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,8 +47,8 @@ public class ImageFileUtil {
 
     private static void writeImage(byte[] image, String fileName) {
 
-        byte[] data =new byte[image.length];
-        System.arraycopy(image,0,data,0,data.length);
+        byte[] data = new byte[image.length];
+        System.arraycopy(image, 0, data, 0, data.length);
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(fileName);
@@ -63,6 +64,14 @@ public class ImageFileUtil {
                 }
             }
         }
+
+    }
+
+
+    /**
+     * 实现yuv转换成rgb
+     **/
+    public  static void yuv2Rgb(Image image) {
 
     }
 
