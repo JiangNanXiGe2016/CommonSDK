@@ -10,8 +10,8 @@
     <FrameLayout
         android:id="@+id/id_card_front_side"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,24 +23,30 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical" />
 
-        <ImageView
-            android:id="@+id/img_front"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="40dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="5dp">
 
-            />
+            <ImageView
+                android:id="@+id/img_front"
+                android:layout_width="280dp"
+                android:layout_height="175dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@drawable/front_side" />
+        </androidx.cardview.widget.CardView>
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/id_card_back_side"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/id_card_front_side">
 
         <RadioButton
@@ -49,11 +55,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical" />
 
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="40dp" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="5dp">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="280dp"
+                android:layout_height="175dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/back_side" />
+        </androidx.cardview.widget.CardView>
+
     </FrameLayout>
 
     <Button
@@ -69,7 +85,7 @@
         app:layout_constraintTop_toBottomOf="@id/id_card_back_side" />
 
     <Button
-        android:id="@+id/take_pic"
+        android:id="@+id/take_pic_again"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="20dp"

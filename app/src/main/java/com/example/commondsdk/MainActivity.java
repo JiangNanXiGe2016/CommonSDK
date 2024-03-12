@@ -39,6 +39,9 @@ public class MainActivity extends BaseActionBarActivity {
         mainBinding.startTake.setOnClickListener((v) -> {
             startOrc();
         });
+        mainBinding.previewImages.setOnClickListener((view)->{
+            jump(PicResultActivity.class,null);
+        });
         mainBinding.quiteApp.setOnClickListener((v) -> {
             startOrcResult();
         });

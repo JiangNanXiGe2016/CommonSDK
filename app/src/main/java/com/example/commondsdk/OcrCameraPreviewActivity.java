@@ -7,15 +7,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.commondsdk.databinding.ActivityOcrCameraPreviewBinding;
 import com.example.ocr.OrcCameraView;
 import com.example.ocr.SoundUtil;
+
+import java.util.Random;
+
 
 public class OcrCameraPreviewActivity extends BaseActionBarActivity {
 
@@ -39,7 +36,13 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
                     handler.postDelayed(() -> {
                         previewBinding.ocrCameraView.closeCamera();
                         Bundle bundle = new Bundle();
-                        bundle.putString(Constant.IMAGE_URL, url);
+
+                        boolean isFrontSide=cardFrontSideRandom();
+                        if(isFrontSide){
+                            bundle.putString(Constant.IMAGE__FRONT_URL, url);
+                        }else {
+                            bundle.putString(Constant.IMAGE__BACK_URL, url);
+                        }
                         jump(PicResultActivity.class, bundle);
                         finish();
                     }, 1000);
@@ -50,6 +53,13 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         previewBinding.navigationBack.setOnClickListener((v) -> {
             finish();
         });
+    }
+
+    // 随机正反面
+    private boolean cardFrontSideRandom() {
+        Random random = new Random();
+        int sand = random.nextInt(1000);
+        return sand % 2 == 0;
     }
 
     @Override

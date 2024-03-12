@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">CommondSDK</string>
-    <string name="quite_app">退出\n</string>
+    <string name="quite_app">退出</string>
     <string name="start_take_pic">开始拍摄身份证</string>
     <string name="main_title">Orc身份证识别</string>
     <string name="result_title">身份证</string>
@@ -9,4 +9,5 @@
     <string name="take_pic_again">重新拍摄</string>
     <string name="navigation_back">返回</string>
     <string name="take_pic">拍照</string>
+    <string name="preview_images">预览</string>
 </resources>
