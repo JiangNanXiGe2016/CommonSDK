@@ -12,6 +12,7 @@ import com.example.commondsdk.databinding.ActivityOcrCameraPreviewBinding;
 import com.example.ocr.OrcCameraView;
 import com.example.ocr.SoundUtil;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -19,6 +20,8 @@ import java.util.Random;
 public class OcrCameraPreviewActivity extends BaseActionBarActivity {
 
     ActivityOcrCameraPreviewBinding previewBinding;
+    Handler handler = new Handler(Looper.getMainLooper());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,7 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         previewBinding = ActivityOcrCameraPreviewBinding.inflate(getLayoutInflater());
         setContentView(previewBinding.getRoot());
         hideActionBar();
-        Handler handler = new Handler(Looper.getMainLooper());
+
         String url = ImageFileUtil.productImageUrl();
         Log.i(TAG, " take image url=" + url);
         previewBinding.takePic.setOnClickListener(v -> {
@@ -34,14 +37,7 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
             previewBinding.ocrCameraView.takePicture(new OrcCameraView.PictureTakeCallBack() {
                 @Override
                 public void onTakePic(ImageReader imageReader) {
-                    ImageFileUtil.saveImage(imageReader.acquireLatestImage(), url);
-                    handler.postDelayed(() -> {
-                        previewBinding.ocrCameraView.closeCamera();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(Constant.IMAGE_URL, url);
-                        jump(PicResultActivity.class, bundle);
-                        finish();
-                    }, 1000);
+
                 }
             });
         });
@@ -50,17 +46,54 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         });
         String frontText = getString(R.string.id_card_front_text);
         String backText = getString(R.string.id_card_back_text);
+        Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
+        int step = bundle.getInt(Constant.IMAGE_OCR_STEP, -1);
+        if (step == Constant.STEP_FRONT_SIDE) {
+            previewBinding.hintTv.setText(frontText);
+        } else if (step == Constant.STEP_BACK_SIDE) {
+            previewBinding.hintTv.setText(backText);
+        }
+        previewBinding.ocrCameraView.enableOnFrame(true);
         previewBinding.ocrCameraView.addFrameListener(new OrcCameraView.OnFrameListener() {
             @Override
             public void onFrame(ImageReader imageReader) {
-                Image image = imageReader.acquireLatestImage();
-                Log.d(TAG, "onCameraFrame:" + image);
-                if (image != null) {
-                    image.close();
-                }
+                mockIDCadOrcProccess(imageReader, url);
             }
         });
     }
+
+
+    //模拟ocr识别，抓拍
+    private void mockIDCadOrcProccess(ImageReader imageReader, String url) {
+        Image mImage = imageReader.acquireLatestImage();
+        Log.d(TAG, "onCameraFrame:" + mImage);
+        ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
+        byte[] data = new byte[buffer.capacity()];
+        buffer.get(data);
+        //
+        if (isPerfect(0, data, 320, 200)) {
+            previewBinding.ocrCameraView.enableOnFrame(false);
+            ImageFileUtil.saveImage(data, url);
+            previewBinding.ocrCameraView.closeCamera();
+            Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
+            bundle.putString(Constant.IMAGE_URL, url);
+            jump(PicResultActivity.class, bundle);
+            finish();
+        }
+        // image must close
+        mImage.close();
+    }
+
+
+    /**
+     * 模拟算法接口
+     **/
+    private boolean isPerfect(int type, byte[] image, int imgW, int imgH) {
+        Random random = new Random();
+        int ret = random.nextInt(1000);
+        return ret % 5 == 0;
+    }
+
 
     // 随机正反面
     private boolean cardFrontSideRandom() {

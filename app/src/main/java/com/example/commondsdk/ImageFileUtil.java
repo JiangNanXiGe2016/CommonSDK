@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class ImageFileUtil {
-    static void saveImage(Image mImage, String uri) {
+    static void saveImage(byte[] mImage, String uri) {
         Executors.newSingleThreadExecutor().submit(new Runnable() {
             @Override
             public void run() {
@@ -44,11 +44,10 @@ public class ImageFileUtil {
         }
     }
 
-    private static void writeImage(Image mImage, String fileName) {
-        ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
-        byte[] data = new byte[buffer.capacity()];
-        buffer.get(data);
+    private static void writeImage(byte[] image, String fileName) {
 
+        byte[] data =new byte[image.length];
+        System.arraycopy(image,0,data,0,data.length);
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(fileName);
@@ -63,7 +62,6 @@ public class ImageFileUtil {
                     e.printStackTrace();
                 }
             }
-            mImage.close();
         }
 
     }

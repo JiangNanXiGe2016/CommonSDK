@@ -335,7 +335,7 @@ public class OrcCameraView extends TextureView {
                 callBack.onTakePic(imageReader);
             }
             // onFrame, data  dependency  ImageReader.Format
-            if (onFrameListener != null && mCameraDevice != null) {
+            if (onFrameListener != null && mCameraDevice != null&&onFrameEnable) {
                 onFrameListener.onFrame(imageReader);
             }
         }
@@ -344,6 +344,12 @@ public class OrcCameraView extends TextureView {
 
     PictureTakeCallBack callBack;
     OnFrameListener onFrameListener;
+    boolean onFrameEnable=false;
+
+    // 控制视频帧
+    public void enableOnFrame(boolean enable) {
+        onFrameEnable=enable;
+    }
 
     public interface OnFrameListener {
         void onFrame(ImageReader imageReader);

@@ -41,7 +41,7 @@ public class PicResultActivity extends BaseActionBarActivity {
     private void setUpView() {
         RequestOptions requestOptions_front = new RequestOptions().placeholder(R.drawable.front_side).override(480, 300);
         Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
-        String imageUrl="";
+        String imageUrl = "";
         if (bundle != null) {
             imageUrl = bundle.getString(Constant.IMAGE_URL);
         }
@@ -62,7 +62,8 @@ public class PicResultActivity extends BaseActionBarActivity {
     private void takeImageAgain() {
         ImageFileUtil.clearImageCache();
         SPUtils.clear(getApplicationContext());
-        jump(OcrCameraPreviewActivity.class, null);
+        Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
+        jump(OcrCameraPreviewActivity.class, bundle);
     }
 
     private void toAlblums() {
@@ -82,7 +83,6 @@ public class PicResultActivity extends BaseActionBarActivity {
             Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
             if (bundle != null) {
                 String frontSideUrl = bundle.getString(Constant.IMAGE_URL);
-
                 Log.i(TAG, "frontSideUrl=" + frontSideUrl);
                 if (TextUtils.isEmpty(frontSideUrl)) {
                     return;
@@ -92,10 +92,23 @@ public class PicResultActivity extends BaseActionBarActivity {
                 handler.postDelayed(() -> {
                     Toast.makeText(this, "图片已保存到相册！", Toast.LENGTH_SHORT).show();
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(frontSideUrl))));
+                    jumpToNextStep();
+
                 }, 1000);
             }
         } catch (Exception e) {
             e.fillInStackTrace();
+        }
+    }
+
+    private void jumpToNextStep() {
+        Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
+        int step = bundle.getInt(Constant.IMAGE_OCR_STEP);
+        if (step == Constant.STEP_BACK_SIDE) {
+            Toast.makeText(this, "正反面均已拍摄完成！", Toast.LENGTH_SHORT).show();
+        } else if (step == Constant.STEP_FRONT_SIDE) {
+            bundle.putInt(Constant.IMAGE_OCR_STEP, Constant.STEP_BACK_SIDE);
+            jump(OcrCameraPreviewActivity.class, bundle);
         }
     }
 
