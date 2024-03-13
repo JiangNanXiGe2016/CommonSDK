@@ -59,16 +59,10 @@ public class MainActivity extends BaseActionBarActivity {
             Log.i(TAG, "未请求成功");
             return;
         }
-        Bundle bundle = new Bundle();
-        Object step = SPUtils.get(getApplicationContext(), Constant.IMAGE_OCR_STEP, -1);
-        if (step == null || (int) step != -1) {
-            bundle.putInt(Constant.IMAGE_OCR_STEP, Constant.STEP_FRONT_SIDE);
-        }
+        SPUtils.put(getApplicationContext(), Constant.IMAGE_OCR_STEP, Constant.STEP_FRONT_SIDE);
         //清除本地保存的
         //打开相机预览
         Intent intent = new Intent(getApplicationContext(), OcrCameraPreviewActivity.class);
-        bundle.putInt(Constant.IMAGE_OCR_STEP, Constant.STEP_FRONT_SIDE);
-        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

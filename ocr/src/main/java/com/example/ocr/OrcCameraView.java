@@ -202,8 +202,8 @@ public class OrcCameraView extends TextureView {
 
 
             imageInfo =new ImageInfo();
-            imageInfo.framePicH=mPreViewSize.getHeight();
-            imageInfo.framePicW=mPreViewSize.getWidth();
+            imageInfo.framePicH=mPreViewSize.getWidth();
+            imageInfo.framePicW=mPreViewSize.getHeight();
 
 
             // mImageReader = ImageReader.newInstance(640, 480, ImageFormat.YUV_420_888, 10);

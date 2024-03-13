@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.Manifest;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,7 +46,6 @@ public class PicResultActivity extends BaseActionBarActivity {
 
     private void setUpView() {
         RequestOptions requestOptions_front = new RequestOptions().placeholder(R.drawable.front_side).override(480, 300);
-        Bundle bundle = getIntent().getExtras();
         String imageUrl = (String) SPUtils.get(getApplicationContext(), Constant.IMAGE_URL, "");
         Log.i(TAG, "imageUrl=" + imageUrl);
         if (!TextUtils.isEmpty(imageUrl)) {
@@ -67,10 +65,10 @@ public class PicResultActivity extends BaseActionBarActivity {
     }
 
     private void takeImageAgain() {
-        ImageFileUtil.clearImageCache();
-        SPUtils.clear(getApplicationContext());
-        Bundle bundle = getIntent().getExtras();
-        jump(OcrCameraPreviewActivity.class, bundle);
+//        FileUtil.clearImageCache();
+//        SPUtils.clear(getApplicationContext());
+        Intent intent = new Intent(PicResultActivity.this,OcrCameraPreviewActivity.class);
+        startActivity(intent);
     }
 
     private void toAlblums() {
@@ -87,35 +85,34 @@ public class PicResultActivity extends BaseActionBarActivity {
 
     private void doSaveImage() {
         try {
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null) {
-                String frontSideUrl = bundle.getString(Constant.IMAGE_URL);
-                Log.i(TAG, "frontSideUrl=" + frontSideUrl);
-                if (TextUtils.isEmpty(frontSideUrl)) {
-                    return;
-                }
-                MediaStore.Images.Media.insertImage(getContentResolver(), frontSideUrl, "title", "description");
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(() -> {
-                    Toast.makeText(this, "图片已保存到相册！", Toast.LENGTH_SHORT).show();
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(frontSideUrl))));
-                    jumpToNextStep();
-
-                }, 1000);
+            String imageUrl = (String) SPUtils.get(getApplicationContext(), Constant.IMAGE_URL, "");
+            Log.i(TAG, "imageUrl=" + imageUrl);
+            if (TextUtils.isEmpty(imageUrl)) {
+                return;
             }
+            MediaStore.Images.Media.insertImage(getContentResolver(), imageUrl, "title", "description");
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(() -> {
+                Toast.makeText(this, "图片已保存到相册！", Toast.LENGTH_SHORT).show();
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(imageUrl))));
+                jumpToNextStep();
+
+            }, 1000);
         } catch (Exception e) {
             e.fillInStackTrace();
         }
     }
 
     private void jumpToNextStep() {
-        Bundle bundle = getIntent().getExtras();
-        int step = bundle.getInt(Constant.IMAGE_OCR_STEP);
+        int step = (int)SPUtils.get(getApplicationContext(),Constant.IMAGE_OCR_STEP,-1);
+        Log.i(TAG, "jumpToNextStep:step=" + step);
         if (step == Constant.STEP_BACK_SIDE) {
             Toast.makeText(this, "正反面均已拍摄完成！", Toast.LENGTH_SHORT).show();
         } else if (step == Constant.STEP_FRONT_SIDE) {
-            bundle.putInt(Constant.IMAGE_OCR_STEP, Constant.STEP_BACK_SIDE);
-            jump(OcrCameraPreviewActivity.class, bundle);
+            SPUtils.put(getApplicationContext(),Constant.IMAGE_OCR_STEP,Constant.STEP_BACK_SIDE);
+            Intent intent = new Intent(PicResultActivity.this,OcrCameraPreviewActivity.class);
+            startActivity(intent);
+
         }
     }
 

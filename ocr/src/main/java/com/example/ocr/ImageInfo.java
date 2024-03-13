@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 
 public class ImageInfo {
     // frame preview witdh and height
-    int framePicW;
-    int framePicH;
+   public int framePicW;
+   public int framePicH;
 
     // bank in image preview ,start and end point position
     DashBoxInfo dashBoxInfo;

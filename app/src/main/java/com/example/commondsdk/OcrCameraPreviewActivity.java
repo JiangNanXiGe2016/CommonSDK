@@ -14,8 +14,6 @@ import com.example.ocr.ImageInfo;
 import com.example.ocr.OrcCameraView;
 import com.example.ocr.SoundUtil;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Random;
 
 
@@ -47,8 +45,7 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         });
         String frontText = getString(R.string.id_card_front_text);
         String backText = getString(R.string.id_card_back_text);
-        Bundle bundle = getIntent().getExtras();
-        int step = bundle.getInt(Constant.IMAGE_OCR_STEP, -1);
+        int step = (int)SPUtils.get(getApplicationContext(),Constant.IMAGE_OCR_STEP,-1);
         if (step == Constant.STEP_FRONT_SIDE) {
             previewBinding.hintTv.setText(frontText);
         } else if (step == Constant.STEP_BACK_SIDE) {
@@ -72,27 +69,20 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
 
         Log.d(TAG, "onCameraFrame:mImage" + mImage);
         Log.d(TAG, "onCameraFrame:imageSize" + imageSize);
-        ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
-        byte[] data = new byte[buffer.capacity()];
-        buffer.get(data);
 
-        // push image to ocr
-        if (isPerfect(0, data, 320, 200)) {
+        byte[] data = ImageUtil.imageToByteArray(mImage);
+       //  byte[] rbg=ImageUtil.jpeg2RgbByteArray(data);
+        // 1.push image to ocr
+        if (isPerfect(0, data, imageSize.framePicW, imageSize.framePicH)) {
             //1.stop onFrame
             previewBinding.ocrCameraView.enableOnFrame(false);
-            String url = ImageFileUtil.productImageUrl();
+            String url = FileUtil.productImageUrl();
 
             //2.save image
-            ImageFileUtil.saveImage(data, url, () -> {
+            FileUtil.saveImage(data, url, () -> {
                 //3.to image result page
-                Bundle bundle = getIntent().getExtras();
-                int step = bundle.getInt(Constant.IMAGE_OCR_STEP, -1);
-                Bundle previewBundle = new Bundle();
-                previewBundle.putInt(Constant.IMAGE_OCR_STEP, step);
-                Log.i(TAG, "previewBundle" + url);
                 SPUtils.put(getApplicationContext(), Constant.IMAGE_URL, url);
                 Intent intent = new Intent(OcrCameraPreviewActivity.this, PicResultActivity.class);
-                intent.putExtras(previewBundle);
                 startActivity(intent);
                 finish();
             });
@@ -100,10 +90,7 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
             mImage.close();
         }
         // image must close
-
     }
-
-
     /**
      * 模拟算法接口
      **/
