@@ -36,19 +36,23 @@ public class PicResultActivity extends BaseActionBarActivity {
         setContentView(picResultBinding.getRoot());
         setActionBarTitle(getString(R.string.act_result_title));
         showNavigation(false);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setUpView();
     }
 
     private void setUpView() {
         RequestOptions requestOptions_front = new RequestOptions().placeholder(R.drawable.front_side).override(480, 300);
-        Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
-        String imageUrl = "";
-        if (bundle != null) {
-            imageUrl = bundle.getString(Constant.IMAGE_URL);
-        }
+        Bundle bundle = getIntent().getExtras();
+        String imageUrl = (String) SPUtils.get(getApplicationContext(), Constant.IMAGE_URL, "");
         Log.i(TAG, "imageUrl=" + imageUrl);
         if (!TextUtils.isEmpty(imageUrl)) {
             Glide.with(this).load(imageUrl).apply(requestOptions_front).into(picResultBinding.imgFront);
+            //  Glide.with(this).load(imageUrl).skipMemoryCache(true).apply(requestOptions_front).into(picResultBinding.imgFront);
         }
         picResultBinding.usePic.setOnClickListener((v) -> {
             //保存图片到相册
@@ -65,7 +69,7 @@ public class PicResultActivity extends BaseActionBarActivity {
     private void takeImageAgain() {
         ImageFileUtil.clearImageCache();
         SPUtils.clear(getApplicationContext());
-        Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
+        Bundle bundle = getIntent().getExtras();
         jump(OcrCameraPreviewActivity.class, bundle);
     }
 
@@ -83,7 +87,7 @@ public class PicResultActivity extends BaseActionBarActivity {
 
     private void doSaveImage() {
         try {
-            Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
+            Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 String frontSideUrl = bundle.getString(Constant.IMAGE_URL);
                 Log.i(TAG, "frontSideUrl=" + frontSideUrl);
@@ -105,7 +109,7 @@ public class PicResultActivity extends BaseActionBarActivity {
     }
 
     private void jumpToNextStep() {
-        Bundle bundle = getIntent().getBundleExtra(Constant.BUNDLE_PARAMS);
+        Bundle bundle = getIntent().getExtras();
         int step = bundle.getInt(Constant.IMAGE_OCR_STEP);
         if (step == Constant.STEP_BACK_SIDE) {
             Toast.makeText(this, "正反面均已拍摄完成！", Toast.LENGTH_SHORT).show();

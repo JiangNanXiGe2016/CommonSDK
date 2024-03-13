@@ -68,7 +68,7 @@ public class MainActivity extends BaseActionBarActivity {
         //打开相机预览
         Intent intent = new Intent(getApplicationContext(), OcrCameraPreviewActivity.class);
         bundle.putInt(Constant.IMAGE_OCR_STEP, Constant.STEP_FRONT_SIDE);
-        intent.putExtra(Constant.BUNDLE_PARAMS, bundle);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

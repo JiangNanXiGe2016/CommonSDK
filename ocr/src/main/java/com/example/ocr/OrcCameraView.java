@@ -199,7 +199,7 @@ public class OrcCameraView extends TextureView {
             //  rect = new Rect(0, 0, 2500, 4700);
 
             // 创建一个JPEG格式的图像读取器
-            mImageReader = ImageReader.newInstance(mPreViewSize.getWidth(), mPreViewSize.getHeight(), ImageFormat.JPEG, 10);
+            mImageReader = ImageReader.newInstance(mPreViewSize.getWidth(), mPreViewSize.getHeight(), ImageFormat.JPEG, 1);
 
             // mImageReader = ImageReader.newInstance(640, 480, ImageFormat.YUV_420_888, 10);
 
@@ -330,7 +330,7 @@ public class OrcCameraView extends TextureView {
     private ImageReader.OnImageAvailableListener onImageAvaiableListener = new ImageReader.OnImageAvailableListener() {
         @Override
         public void onImageAvailable(ImageReader imageReader) {
-            Log.d(TAG, "onImageAvailable");
+            Log.d("yangliang", "onImageAvailable"+"onFrameEnable="+onFrameEnable);
             if (callBack != null && mCameraDevice != null) {
                 callBack.onTakePic(imageReader);
             }

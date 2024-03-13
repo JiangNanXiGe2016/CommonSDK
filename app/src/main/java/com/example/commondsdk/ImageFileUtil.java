@@ -14,14 +14,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class ImageFileUtil {
-    static void saveImage(byte[] mImage, String uri) {
+    static void saveImage(byte[] mImage, String uri, Listener listener) {
         Executors.newSingleThreadExecutor().submit(new Runnable() {
             @Override
             public void run() {
-                writeImage(mImage, uri);
+                writeImage(mImage, uri, listener);
             }
         });
 
+    }
+
+    interface Listener {
+
+        void onComplete();
     }
 
     public static String productImageUrl() {
@@ -45,7 +50,7 @@ public class ImageFileUtil {
         }
     }
 
-    private static void writeImage(byte[] image, String fileName) {
+    private static void writeImage(byte[] image, String fileName, Listener listener) {
 
         byte[] data = new byte[image.length];
         System.arraycopy(image, 0, data, 0, data.length);
@@ -53,6 +58,9 @@ public class ImageFileUtil {
         try {
             fos = new FileOutputStream(fileName);
             fos.write(data, 0, data.length);
+            if (listener != null) {
+                listener.onComplete();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -71,7 +79,7 @@ public class ImageFileUtil {
     /**
      * 实现yuv转换成rgb
      **/
-    public  static void yuv2Rgb(Image image) {
+    public static void yuv2Rgb(Image image) {
 
     }
 

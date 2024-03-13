@@ -50,7 +50,7 @@ public class BaseActionBarActivity extends AppCompatActivity {
 
     void jump(Class act, Bundle params) {
         Intent intent = new Intent(this, act);
-        intent.putExtra(Constant.BUNDLE_PARAMS, params);
+        intent.putExtras(params);
         startActivity(intent);
     }
 }
