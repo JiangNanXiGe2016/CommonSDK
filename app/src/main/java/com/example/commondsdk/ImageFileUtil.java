@@ -31,7 +31,7 @@ public class ImageFileUtil {
             boolean ret = mImageFile.mkdirs();
             assert (ret);
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("YYYYMMdd_HHmmss").format(new Date());
         String fileName = path + "IMG_" + timeStamp + ".jpg";
         return fileName;
     }

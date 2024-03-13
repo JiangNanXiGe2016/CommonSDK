@@ -41,10 +41,10 @@ public class DashedRectangleView extends View {
 
     private void init() {
         dashedPaint = new Paint();
-        dashedPaint.setColor(Color.GREEN); // 虚线颜色
+        dashedPaint.setColor(Color.WHITE); // 虚线颜色
         dashedPaint.setStyle(Paint.Style.STROKE);
-        dashedPaint.setStrokeWidth(10); // 虚线宽度
-        dashedPaint.setPathEffect(new DashPathEffect(new float[]{10, 5}, 0)); // 虚线效果，10像素实线，5像素空白
+        dashedPaint.setStrokeWidth(5); // 虚线宽度
+        dashedPaint.setPathEffect(new DashPathEffect(new float[]{5, 5}, 5)); // 虚线效果，10像素实线，5像素空白
 
         fillPaint = new Paint();
         fillPaint.setColor(Color.TRANSPARENT); // 内部高亮颜色
