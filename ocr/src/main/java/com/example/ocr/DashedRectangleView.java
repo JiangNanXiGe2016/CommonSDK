@@ -4,12 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.RadialGradient;
-import android.graphics.Shader;
-import android.os.Handler;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -71,27 +66,40 @@ public class DashedRectangleView extends View {
         float height = getHeight();
         float retW = 500 * factor;
         float retH = 800 * factor;
-        float start = (width - retW) / 2;
-        float top = (height - retH) / 2;
-        float end = (width + retW) / 2;
-        float bottom = (height + retH) / 2;
+
+        blankStart = (width - retW) / 2;
+        blankTop = (height - retH) / 2;
+        blankEnd = (width + retW) / 2;
+        blankBottom = (height + retH) / 2;
+        info.startLeftX = blankStart;
+        info.startLeftY = blankTop;
+        info.endRightX = blankEnd;
+        info.endRightY = blankBottom;
         Log.i("yangliang", "width=" + width + " height=" + height);
         // 绘制半透明区域
-        canvas.drawRect(0, 0, width, top, maskPaint);
-        canvas.drawRect(0, top, start, bottom, maskPaint);
-        canvas.drawRect(end, top, width, bottom, maskPaint);
-        canvas.drawRect(0, bottom, width, height, maskPaint);
+        canvas.drawRect(0, 0, width, blankTop, maskPaint);
+        canvas.drawRect(0, blankTop, blankStart, blankBottom, maskPaint);
+        canvas.drawRect(blankEnd, blankTop, width, blankBottom, maskPaint);
+        canvas.drawRect(0, blankBottom, width, height, maskPaint);
         //绘制虚线框
-        canvas.drawRect(start, top, end, bottom, dashedPaint);
+        canvas.drawRect(blankStart, blankTop, blankEnd, blankBottom, dashedPaint);
         // 绘制内部高亮区域（缩小一些以避免与虚线重叠）
         int inset = 5; // 内部高亮缩小的像素值
-        canvas.drawRect(start + inset, top + inset, end - inset, bottom - inset, fillPaint);
-
-//        if (TextUtils.isEmpty(text)) {
-//            return;
-//        }
-        //canvas.drawText("xxxxxxxxx", 0, 0, textPaint);
+        canvas.drawRect(blankStart + inset, blankTop + inset, blankEnd - inset, blankBottom - inset, fillPaint);
     }
+
+    float blankStart;
+    float blankTop;
+    float blankEnd;
+
+    float blankBottom;
+    DashBoxInfo info = new DashBoxInfo();
+    ;
+
+    public DashBoxInfo getDashBoxPos() {
+        return info;
+    }
+
 
     public void drawText(String text) {
         this.text = text;

@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.example.commondsdk.databinding.ActivityOcrCameraPreviewBinding;
+import com.example.ocr.ImageInfo;
 import com.example.ocr.OrcCameraView;
 import com.example.ocr.SoundUtil;
 
@@ -31,7 +32,7 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         setContentView(previewBinding.getRoot());
         hideActionBar();
 
-
+        previewBinding.ocrCameraView.setDashedRectangleView(previewBinding.dashView);
         previewBinding.takePic.setOnClickListener(v -> {
             SoundUtil.shootSound(getApplicationContext());
             previewBinding.ocrCameraView.takePicture(new OrcCameraView.PictureTakeCallBack() {
@@ -58,17 +59,19 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         // 相机出帧回调
         previewBinding.ocrCameraView.addFrameListener(new OrcCameraView.OnFrameListener() {
             @Override
-            public void onFrame(ImageReader imageReader) {
-                mockProcess(imageReader);
+            public void onFrame(ImageReader imageReader, ImageInfo imageSize) {
+                mockProcess(imageReader, imageSize);
             }
         });
     }
 
 
     //模拟ocr识别，抓拍
-    private void mockProcess(ImageReader imageReader) {
+    private void mockProcess(ImageReader imageReader, ImageInfo imageSize) {
         Image mImage = imageReader.acquireLatestImage();
-        // Log.d(TAG, "onCameraFrame:" + mImage);
+
+        Log.d(TAG, "onCameraFrame:mImage" + mImage);
+        Log.d(TAG, "onCameraFrame:imageSize" + imageSize);
         ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
         byte[] data = new byte[buffer.capacity()];
         buffer.get(data);

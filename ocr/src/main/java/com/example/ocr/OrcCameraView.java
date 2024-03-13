@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
-import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -16,29 +15,20 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.icu.math.BigDecimal;
-import android.media.Image;
 import android.media.ImageReader;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executors;
 
 public class OrcCameraView extends TextureView {
     private static final String TAG = "OrcCameraView";
@@ -52,10 +42,19 @@ public class OrcCameraView extends TextureView {
     private Size mPreViewSize; // 预览画面的尺寸
     private int mCameraType = CameraCharacteristics.LENS_FACING_FRONT; // 摄像头类型
     private int mTakeType = 0; // 拍摄类型。0为单拍，1为连拍
+    //预览数据封装
+    private ImageInfo imageInfo;
+    DashedRectangleView  dashedRectangleView;
+
+    public void setDashedRectangleView(DashedRectangleView dashedRectangleView) {
+        this.dashedRectangleView = dashedRectangleView;
+    }
 
     public OrcCameraView(Context context) {
         this(context, null);
     }
+
+
 
     public OrcCameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -201,6 +200,12 @@ public class OrcCameraView extends TextureView {
             // 创建一个JPEG格式的图像读取器
             mImageReader = ImageReader.newInstance(mPreViewSize.getWidth(), mPreViewSize.getHeight(), ImageFormat.JPEG, 1);
 
+
+            imageInfo =new ImageInfo();
+            imageInfo.framePicH=mPreViewSize.getHeight();
+            imageInfo.framePicW=mPreViewSize.getWidth();
+
+
             // mImageReader = ImageReader.newInstance(640, 480, ImageFormat.YUV_420_888, 10);
 
 
@@ -336,7 +341,8 @@ public class OrcCameraView extends TextureView {
             }
             // onFrame, data  dependency  ImageReader.Format
             if (onFrameListener != null && mCameraDevice != null&&onFrameEnable) {
-                onFrameListener.onFrame(imageReader);
+                imageInfo.dashBoxInfo =dashedRectangleView.getDashBoxPos();
+                onFrameListener.onFrame(imageReader, imageInfo);
             }
         }
     };
@@ -352,7 +358,7 @@ public class OrcCameraView extends TextureView {
     }
 
     public interface OnFrameListener {
-        void onFrame(ImageReader imageReader);
+        void onFrame(ImageReader imageReader, ImageInfo imageSize);
     }
 
     public interface PictureTakeCallBack {
