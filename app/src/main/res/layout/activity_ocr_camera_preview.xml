@@ -9,8 +9,8 @@
 
     <com.example.ocr.OrcCameraView
         android:id="@+id/ocr_camera_view"
-        android:layout_width="640dp"
-        android:layout_height="853dp"
+        android:layout_width="480dp"
+        android:layout_height="640dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
