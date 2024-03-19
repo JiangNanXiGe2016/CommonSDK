@@ -1,4 +1,4 @@
-package com.example.ocr;
+package com.example.commondsdk.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import com.example.commondsdk.camera2.DashBoxInfo;
 
 public class DashedRectangleView extends View {
 

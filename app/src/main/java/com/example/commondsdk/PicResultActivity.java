@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.commondsdk.databinding.ActivityPicResultBinding;
+import com.example.commondsdk.util.SPUtils;
 
 import java.io.File;
 

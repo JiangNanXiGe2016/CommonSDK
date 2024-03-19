@@ -1,4 +1,4 @@
-package com.example.ocr;
+package com.example.commondsdk.util;
 
 import android.app.Activity;
 import android.content.Context;

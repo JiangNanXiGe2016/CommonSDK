@@ -1,11 +1,11 @@
-package com.example.ocr;
+package com.example.commondsdk.camera2;
 
 public class DashBoxInfo {
-    float startLeftX;
-    float startLeftY;
+   public float startLeftX;
+    public float startLeftY;
 
-    float endRightX;
-    float endRightY;
+    public float endRightX;
+    public float endRightY;
 
     @Override
     public String toString() {

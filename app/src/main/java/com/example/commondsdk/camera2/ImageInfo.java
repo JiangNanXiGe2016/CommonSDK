@@ -1,4 +1,4 @@
-package com.example.ocr;
+package com.example.commondsdk.camera2;
 
 import androidx.annotation.NonNull;
 

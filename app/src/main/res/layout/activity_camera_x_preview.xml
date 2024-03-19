@@ -7,10 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".OcrCameraPreviewActivity">
 
-    <com.example.commondsdk.camera2.OrcCameraView
-        android:id="@+id/ocr_camera_view"
-        android:layout_width="480dp"
-        android:layout_height="640dp"
+    <TextureView
+        android:id="@+id/camerax_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,6 +25,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/hint_tv"

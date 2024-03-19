@@ -4,16 +4,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.commondsdk.databinding.ActivityMainBinding;
-import com.example.ocr.Permission;
+import com.example.commondsdk.util.Permission;
+import com.example.commondsdk.util.SPUtils;
 
 public class MainActivity extends BaseActionBarActivity {
     private String TAG = Constant.TAG;
@@ -23,6 +22,7 @@ public class MainActivity extends BaseActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // EdgeToEdge.enable(this);
+
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -36,6 +36,9 @@ public class MainActivity extends BaseActionBarActivity {
     //
     private void setUpView() {
         Permission.checkPermission(this);
+        mainBinding.analysisWithCamerax.setOnClickListener(v -> {
+            startCameraXAnalysis();
+        });
         mainBinding.startTake.setOnClickListener((v) -> {
             startOrc();
         });
@@ -63,6 +66,18 @@ public class MainActivity extends BaseActionBarActivity {
         //清除本地保存的
         //打开相机预览
         Intent intent = new Intent(getApplicationContext(), OcrCameraPreviewActivity.class);
+        startActivity(intent);
+    }
+
+    private void startCameraXAnalysis() {
+        if (!Permission.isPermissionGranted(this)) {
+            Log.i(TAG, "未请求成功");
+            return;
+        }
+        SPUtils.put(getApplicationContext(), Constant.IMAGE_OCR_STEP, Constant.STEP_FRONT_SIDE);
+        //清除本地保存的
+        //打开相机预览
+        Intent intent = new Intent(getApplicationContext(), CameraXPreViewActivity.class);
         startActivity(intent);
     }
 }

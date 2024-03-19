@@ -1,9 +1,6 @@
-package com.example.ocr;
+package com.example.commondsdk.util;
 
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 
 public class SoundUtil {
     /**

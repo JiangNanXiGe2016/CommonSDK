@@ -1,4 +1,4 @@
-package com.example.commondsdk;
+package com.example.commondsdk.util;
 
 import android.os.Environment;
 
@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.concurrent.Executors;
 
 public class FileUtil {
-    static void saveImage(byte[] mImage, String uri, Listener listener) {
+   public static void saveImage(byte[] mImage, String uri, Listener listener) {
         Executors.newSingleThreadExecutor().submit(new Runnable() {
             @Override
             public void run() {
@@ -20,7 +20,7 @@ public class FileUtil {
 
     }
 
-    interface Listener {
+    public  interface Listener {
 
         void onComplete();
     }

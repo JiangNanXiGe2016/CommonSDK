@@ -9,10 +9,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.example.commondsdk.camera2.ImageInfo;
+import com.example.commondsdk.camera2.OrcCameraView;
 import com.example.commondsdk.databinding.ActivityOcrCameraPreviewBinding;
-import com.example.ocr.ImageInfo;
-import com.example.ocr.OrcCameraView;
-import com.example.ocr.SoundUtil;
+import com.example.commondsdk.util.FileUtil;
+import com.example.commondsdk.util.ImageUtil;
+import com.example.commondsdk.util.SPUtils;
+import com.example.commondsdk.util.SoundUtil;
 
 import java.util.Random;
 
@@ -45,7 +48,7 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         });
         String frontText = getString(R.string.id_card_front_text);
         String backText = getString(R.string.id_card_back_text);
-        int step = (int)SPUtils.get(getApplicationContext(),Constant.IMAGE_OCR_STEP,-1);
+        int step = (int) SPUtils.get(getApplicationContext(),Constant.IMAGE_OCR_STEP,-1);
         if (step == Constant.STEP_FRONT_SIDE) {
             previewBinding.hintTv.setText(frontText);
         } else if (step == Constant.STEP_BACK_SIDE) {

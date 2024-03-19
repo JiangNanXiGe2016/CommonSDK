@@ -1,4 +1,4 @@
-package com.example.commondsdk;
+package com.example.commondsdk.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

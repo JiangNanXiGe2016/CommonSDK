@@ -1,4 +1,4 @@
-package com.example.ocr;
+package com.example.commondsdk.camera2;
 
 import android.Manifest;
 import android.content.Context;
@@ -26,6 +26,9 @@ import android.view.TextureView;
 
 import androidx.core.app.ActivityCompat;
 
+import com.example.commondsdk.util.ScreenUtil;
+import com.example.commondsdk.view.DashedRectangleView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +47,7 @@ public class OrcCameraView extends TextureView {
     private int mTakeType = 0; // 拍摄类型。0为单拍，1为连拍
     //预览数据封装
     private ImageInfo imageInfo;
-    DashedRectangleView  dashedRectangleView;
+    DashedRectangleView dashedRectangleView;
 
     public void setDashedRectangleView(DashedRectangleView dashedRectangleView) {
         this.dashedRectangleView = dashedRectangleView;

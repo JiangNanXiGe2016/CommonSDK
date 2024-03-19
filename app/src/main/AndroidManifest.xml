@@ -5,7 +5,6 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
@@ -25,13 +24,15 @@
         <activity
             android:name=".PicResultActivity"
             android:exported="false"
-            android:launchMode="singleTask"
-            />
+            android:launchMode="singleTask" />
         <activity
             android:name=".OcrCameraPreviewActivity"
             android:exported="false"
-            android:launchMode="singleTask"
-            />
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".CameraXPreViewActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
