@@ -2,12 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,26 +10,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CommondSDK"
+        android:theme="@style/Theme.CommonSDK"
         tools:targetApi="31">
         <activity
-            android:name=".BaseActionBarActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PicResultActivity"
-            android:exported="false"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".OcrCameraPreviewActivity"
-            android:exported="false"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".CameraXPreViewActivity"
-            android:exported="false"
-            android:launchMode="singleTask" />
-        <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.CommonSDK">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
