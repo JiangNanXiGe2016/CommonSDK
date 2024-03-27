@@ -7,6 +7,7 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.example.commondsdk.camera2.ImageInfo;
@@ -18,13 +19,14 @@ import com.example.commondsdk.util.SPUtils;
 import com.example.commondsdk.util.SoundUtil;
 
 import java.util.Random;
+import java.util.concurrent.Executors;
 
 
 public class OcrCameraPreviewActivity extends BaseActionBarActivity {
 
     ActivityOcrCameraPreviewBinding previewBinding;
     Handler handler = new Handler(Looper.getMainLooper());
-
+    private long mLastAnalysisResultTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         });
         String frontText = getString(R.string.id_card_front_text);
         String backText = getString(R.string.id_card_back_text);
-        int step = (int) SPUtils.get(getApplicationContext(),Constant.IMAGE_OCR_STEP,-1);
+        int step = (int) SPUtils.get(getApplicationContext(), Constant.IMAGE_OCR_STEP, -1);
         if (step == Constant.STEP_FRONT_SIDE) {
             previewBinding.hintTv.setText(frontText);
         } else if (step == Constant.STEP_BACK_SIDE) {
@@ -60,7 +62,54 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
         previewBinding.ocrCameraView.addFrameListener(new OrcCameraView.OnFrameListener() {
             @Override
             public void onFrame(ImageReader imageReader, ImageInfo imageSize) {
-                mockProcess(imageReader, imageSize);
+                // mockProcess(imageReader, imageSize);
+                mImageReader = imageReader;
+                mImageSize = imageSize;
+            }
+        });
+
+        executePytorch();
+    }
+
+
+    private volatile ImageReader mImageReader;
+    private ImageInfo mImageSize;
+
+    private void executePytorch() {
+        if (mImageReader == null) {
+            return;
+        }
+
+        Executors.newSingleThreadExecutor().submit(() -> {
+            while (mImageReader != null) {
+                Image mImage = mImageReader.acquireLatestImage();
+                if (mImage == null) {
+                    continue;
+                }
+                Log.d(TAG, "onCameraFrame:mImage" + mImage);
+                Log.d(TAG, "onCameraFrame:imageSize" + mImage);
+
+                byte[] data = ImageUtil.imageToByteArray(mImage);
+                //  byte[] rbg=ImageUtil.jpeg2RgbByteArray(data);
+                // 1.push image to ocr
+                if (isPerfect(0, data, 0, 0)) {
+                    //1.stop onFrame
+                    previewBinding.ocrCameraView.enableOnFrame(false);
+                    String url = FileUtil.productImageUrl();
+
+                    //2.save image
+                    FileUtil.saveImage(data, url, () -> {
+                        //3.to image result page
+                        SPUtils.put(getApplicationContext(), Constant.IMAGE_URL, url);
+                        Intent intent = new Intent(OcrCameraPreviewActivity.this, PicResultActivity.class);
+                        startActivity(intent);
+                        finish();
+                    });
+                    return;
+                } else {
+                    mImage.close();
+                }
+                mImageReader = null;
             }
         });
     }
@@ -68,32 +117,39 @@ public class OcrCameraPreviewActivity extends BaseActionBarActivity {
 
     //模拟ocr识别，抓拍
     private void mockProcess(ImageReader imageReader, ImageInfo imageSize) {
+//
+//        if (SystemClock.elapsedRealtime() - mLastAnalysisResultTime < 50) {
+//            return;
+//        }
+//        mLastAnalysisResultTime = SystemClock.elapsedRealtime();
         Image mImage = imageReader.acquireLatestImage();
-
-        Log.d(TAG, "onCameraFrame:mImage" + mImage);
-        Log.d(TAG, "onCameraFrame:imageSize" + imageSize);
-
-        byte[] data = ImageUtil.imageToByteArray(mImage);
-       //  byte[] rbg=ImageUtil.jpeg2RgbByteArray(data);
-        // 1.push image to ocr
-        if (isPerfect(0, data, imageSize.framePicW, imageSize.framePicH)) {
-            //1.stop onFrame
-            previewBinding.ocrCameraView.enableOnFrame(false);
-            String url = FileUtil.productImageUrl();
-
-            //2.save image
-            FileUtil.saveImage(data, url, () -> {
-                //3.to image result page
-                SPUtils.put(getApplicationContext(), Constant.IMAGE_URL, url);
-                Intent intent = new Intent(OcrCameraPreviewActivity.this, PicResultActivity.class);
-                startActivity(intent);
-                finish();
-            });
-        } else {
-            mImage.close();
-        }
+        mImage.close();
+//        Image mImage = imageReader.acquireLatestImage();
+//        Log.d(TAG, "onCameraFrame:mImage" + mImage);
+//        Log.d(TAG, "onCameraFrame:imageSize" + imageSize);
+//
+//        byte[] data = ImageUtil.imageToByteArray(mImage);
+//       //  byte[] rbg=ImageUtil.jpeg2RgbByteArray(data);
+//        // 1.push image to ocr
+//        if (isPerfect(0, data, imageSize.framePicW, imageSize.framePicH)) {
+//            //1.stop onFrame
+//            previewBinding.ocrCameraView.enableOnFrame(false);
+//            String url = FileUtil.productImageUrl();
+//
+//            //2.save image
+//            FileUtil.saveImage(data, url, () -> {
+//                //3.to image result page
+//                SPUtils.put(getApplicationContext(), Constant.IMAGE_URL, url);
+//                Intent intent = new Intent(OcrCameraPreviewActivity.this, PicResultActivity.class);
+//                startActivity(intent);
+//                finish();
+//            });
+//        } else {
+//            mImage.close();
+//        }
         // image must close
     }
+
     /**
      * 模拟算法接口
      **/
