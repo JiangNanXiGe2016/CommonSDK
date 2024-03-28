@@ -25,7 +25,7 @@ fun ScreenPicture(saveClick: () -> Unit, quiteClick: () -> Unit) {
                 .padding(10.dp, 10.dp, 10.dp, 10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Purple40),
         ) {
-            Text(text = "Start PreView")
+            Text(text = "Use this picture")
         }
         Button(
             onClick = quiteClick,

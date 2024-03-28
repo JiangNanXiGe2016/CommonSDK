@@ -16,12 +16,10 @@ import com.example.commonsdk.ui.theme.Purple40
 
 
 @Composable
-fun ScreenMain(previewClick: () -> Unit, quiteClick: () -> Unit) {
+fun ScreenMain(previewClick: () -> Unit, quiteClick:() -> Unit) {
     Column() {
         Button(
             onClick = previewClick,
-
-
             Modifier
                 .fillMaxWidth()
                 .height(70.dp)
@@ -31,7 +29,9 @@ fun ScreenMain(previewClick: () -> Unit, quiteClick: () -> Unit) {
             Text(text = "Start PreView")
         }
         Button(
-            onClick = quiteClick,
+            onClick = {
+                quiteClick.invoke()
+            },
             Modifier
                 .fillMaxWidth()
                 .height(70.dp)
