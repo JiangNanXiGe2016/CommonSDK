@@ -9,6 +9,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.AnimationConstants
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +46,7 @@ import com.example.commonsdk.screen.ScreenPicture
 import com.example.commonsdk.screen.ScreenPreView
 import com.example.commonsdk.ui.theme.CommonSDKTheme
 import com.example.commonsdk.ui.theme.Purple40
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 
 class MainActivity : ComponentActivity() {
 
@@ -74,7 +80,7 @@ class MainActivity : ComponentActivity() {
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Preview
 @Composable
 fun App() {
@@ -131,8 +137,19 @@ fun App() {
             }
         }
 
-        NavHost(navController = navController, startDestination = "main") {
-            composable("main") {
+        AnimatedNavHost(navController = navController, startDestination = "main") {
+            composable("main", enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            }, exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+
+            }) {
                 ScreenMain({
                     navController.navigate("preview")
                 }, {
@@ -140,7 +157,18 @@ fun App() {
                 })
                 index = "main"
             }
-            composable("preview") {
+            composable("preview",/*enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            }, */exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+
+            }) {
                 ScreenPreView({
                     navController.navigate("picture")
                 }, {
@@ -149,7 +177,18 @@ fun App() {
                 index = "preview"
 
             }
-            composable("picture") {
+            composable("picture",enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            }, exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+
+            }) {
                 ScreenPicture({
                     navController.navigate("preview")
                 }, {

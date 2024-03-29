@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(files("libs/accompanist-navigation-animation-0.34.0.aar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,5 +73,7 @@ dependencies {
     implementation ("androidx.camera:camera-lifecycle:1.1.0-alpha06")
     implementation ("androidx.camera:camera-view:1.0.0-alpha30")
     implementation ("androidx.activity:activity-compose:1.4.0")
+    //runtimeOnly("com.google.accompanist:accompanist-navigation-animation:0.34.0")
+
 }
 
