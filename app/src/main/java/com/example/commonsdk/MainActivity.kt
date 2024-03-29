@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.ImageAnalysis
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -87,6 +88,7 @@ fun App() {
     val navController = rememberNavController()
     var index by remember { mutableStateOf("main") }
     val act: Activity = LocalContext.current as Activity
+
     Column() {
         when (index) {
             "main" -> {

@@ -1,5 +1,6 @@
 package com.example.commonsdk.screen
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.DashPathEffect
 import android.graphics.Paint
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Px
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
@@ -37,13 +39,17 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.commonsdk.ui.theme.Purple40
 
 private fun bindPreview(
-    lifecycleOwner: LifecycleOwner, previewView: PreviewView, cameraProvider: ProcessCameraProvider
+    lifecycleOwner: LifecycleOwner,
+    previewView: PreviewView,
+    cameraProvider: ProcessCameraProvider,
+    imageAnalyzer: ImageAnalysis
 ) {
     val preview = androidx.camera.core.Preview.Builder().build()
     val cameraSelector: CameraSelector =
         CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
     preview.setSurfaceProvider(previewView.surfaceProvider)
-    val camera = cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview)
+    val camera =
+        cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageAnalyzer)
     camera.cameraControl.cancelFocusAndMetering()
 }
 
@@ -74,7 +80,7 @@ fun ScreenPreView(takePicture: () -> Unit, quiteClick: () -> Unit) {
     Log.i("yl", "blankWidth=$blankWidth blankHeight=$blankHeight")
     // start pos
     val startX = (screenWidth - blankWidth) / 2
-    val startY = screenHeight/2 - (blankHeight / 2)
+    val startY = screenHeight / 2 - (blankHeight / 2)
     // end  pos
     val endX = (screenWidth + blankWidth) / 2
     val endY = (screenHeight / 2) + blankHeight / 2
@@ -97,12 +103,18 @@ fun ScreenPreView(takePicture: () -> Unit, quiteClick: () -> Unit) {
                         implementationMode = PreviewView.ImplementationMode.COMPATIBLE
                     }
                     val executor = ContextCompat.getMainExecutor(ctx)
+                    val imageAnalyzer = ImageAnalysis.Analyzer { imageProxy ->
+                        val buffer = imageProxy.planes[0].buffer
+                        imageProxy.close()
+                        Log.i("yll","onFrame:$buffer")
+                    }
+
+                    val imageAnalysis = ImageAnalysis.Builder().build();
+                    imageAnalysis.setAnalyzer(executor, imageAnalyzer)
                     cameraProviderFuture.addListener({
                         val cameraProvider = cameraProviderFuture.get()
                         bindPreview(
-                            lifecycleOwner,
-                            preview,
-                            cameraProvider,
+                            lifecycleOwner, preview, cameraProvider, imageAnalysis
                         )
                     }, executor)
                     preview
