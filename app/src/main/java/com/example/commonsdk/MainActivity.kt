@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -92,63 +93,26 @@ fun App() {
     Column() {
         when (index) {
             "main" -> {
-                TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Purple40, titleContentColor = Color.White
+                TopBar(false, "身份证拍照", navController)
+            }
 
-                ), title = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,//设置水平居中对齐
-                        verticalAlignment = Alignment.CenterVertically//设置垂直居中对齐
-                    ) {
-                        Text(
-                            text = "身份证",
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                })
+            "preview" -> {
+                TopBar(true, "相机预览", navController)
             }
 
             "picture" -> {
-                TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Purple40, titleContentColor = Color.White
-
-                ), title = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,//设置水平居中对齐
-                        verticalAlignment = Alignment.CenterVertically//设置垂直居中对齐
-                    ) {
-                        Text(
-                            text = "身份证照片",
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }, navigationIcon = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "",
-                        modifier = Modifier.clickable(onClick = {
-                            navController.popBackStack()
-                        }),
-                        tint = Color.White
-                    )
-                })
+                TopBar(true, "身份证照片", navController)
             }
         }
 
         AnimatedNavHost(navController = navController, startDestination = "main") {
             composable("main", enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
+                    AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(100)
                 )
             }, exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
+                    AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(100)
                 )
 
             }) {
@@ -167,7 +131,7 @@ fun App() {
             }, */exitTransition = {
                 slideOutOfContainer(
                     AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
+                    animationSpec = tween(100)
                 )
 
             }) {
@@ -179,15 +143,13 @@ fun App() {
                 index = "preview"
 
             }
-            composable("picture",enterTransition = {
+            composable("picture", enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
+                    AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(100)
                 )
             }, exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
+                    AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(100)
                 )
 
             }) {
@@ -200,7 +162,44 @@ fun App() {
             }
         }
     }
+
+
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(enableBack: Boolean, title: String, navController: NavController) {
+
+    TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = Purple40, titleContentColor = Color.White
+
+    ), title = {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,//设置水平居中对齐
+            verticalAlignment = Alignment.CenterVertically//设置垂直居中对齐
+        ) {
+            Text(
+                text = title, color = Color.White, style = MaterialTheme.typography.titleMedium
+            )
+        }
+    }, navigationIcon = {
+        if (enableBack) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "",
+                modifier = Modifier.clickable(onClick = {
+                    navController.navigate("main")
+                }),
+                tint = Color.White
+            )
+        }
+
+    })
+
+}
+
+
 
 
 
