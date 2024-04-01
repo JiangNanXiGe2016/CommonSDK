@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity() {
             }
         //1.请求相机权限
         cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+
     }
 }
 
