@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -27,6 +28,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
         }
     }
     compileOptions {
@@ -60,6 +67,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(files("libs/accompanist-navigation-animation-0.34.0.aar"))
+    implementation(libs.androidx.profileinstaller)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,12 +76,21 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    var cameraxVersion = "1.2.0-beta01"
     implementation ("androidx.navigation:navigation-compose:2.7.1")
     implementation ("androidx.camera:camera-camera2:1.1.0-alpha06")
-    implementation ("androidx.camera:camera-lifecycle:1.1.0-alpha06")
-    implementation ("androidx.camera:camera-view:1.0.0-alpha30")
-    implementation ("androidx.activity:activity-compose:1.4.0")
-    //runtimeOnly("com.google.accompanist:accompanist-navigation-animation:0.34.0")
+    implementation ("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation ("androidx.camera:camera-view:$cameraxVersion")
+    implementation ("androidx.camera:camera-core:$cameraxVersion")
+    implementation ("androidx.camera:camera-video:$cameraxVersion")
 
+//    implementation "androidx.camera:camera-lifecycle:$cameraxVersion"
+//    implementation "androidx.camera:camera-video:$cameraxVersion"
+//    implementation "androidx.camera:camera-view:$cameraxVersion"
+//    implementation "androidx.camera:camera-extensions:$cameraxVersion"
+    implementation ("androidx.activity:activity-compose:1.4.0")
+    implementation ("pub.devrel:easypermissions:3.0.0")
+
+    //runtimeOnly("com.google.accompanist:accompanist-navigation-animation:0.34.0")
 }
 

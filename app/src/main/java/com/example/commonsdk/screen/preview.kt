@@ -42,22 +42,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.example.commonsdk.bindPreview
 import com.example.commonsdk.ui.theme.Purple40
 
-private fun bindPreview(
-    lifecycleOwner: LifecycleOwner,
-    previewView: PreviewView,
-    cameraProvider: ProcessCameraProvider,
-    imageAnalyzer: ImageAnalysis
-) {
-    val preview = androidx.camera.core.Preview.Builder().build()
-    val cameraSelector: CameraSelector =
-        CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
-    preview.setSurfaceProvider(previewView.surfaceProvider)
-    val camera =
-        cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageAnalyzer)
-    camera.cameraControl.cancelFocusAndMetering()
-}
+
 
 
 @Composable

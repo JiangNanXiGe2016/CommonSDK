@@ -16,7 +16,7 @@ import com.example.commonsdk.ui.theme.Purple40
 
 
 @Composable
-fun ScreenMain(previewClick: () -> Unit, quiteClick:() -> Unit) {
+fun ScreenMain(previewClick: () -> Unit,videoClick:()->Unit, quiteClick:() -> Unit) {
     Column() {
         Button(
             onClick = previewClick,
@@ -26,7 +26,17 @@ fun ScreenMain(previewClick: () -> Unit, quiteClick:() -> Unit) {
                 .padding(10.dp, 10.dp, 10.dp, 10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Purple40),
         ) {
-            Text(text = "Start PreView")
+            Text(text = "Camera PreView")
+        }
+        Button(
+            onClick = videoClick,
+            Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .padding(10.dp, 10.dp, 10.dp, 10.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Purple40),
+        ) {
+            Text(text = "Camera Video")
         }
         Button(
             onClick = {

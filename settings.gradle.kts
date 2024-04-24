@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "CommonSDK"
 include(":app")
+include(":benchmark")
+include(":lint")
+include(":codemodify")
