@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CommonSDK</string>
+    <string name="select_image">选择图片\n</string>
+    <string name="request_permission">申请权限</string>
+    <string name="init">初始化算法</string>
+    <string name="release">释放句柄</string>
 </resources>

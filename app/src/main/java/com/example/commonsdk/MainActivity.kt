@@ -4,6 +4,7 @@ import android.Manifest
 import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,8 +17,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,9 +40,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.commonsdk.screen.OrcScreen
 import com.example.commonsdk.screen.ScreenMain
 import com.example.commonsdk.screen.ScreenPicture
 import com.example.commonsdk.screen.ScreenPreView
@@ -83,7 +90,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
     @Preview
@@ -99,16 +105,20 @@ class MainActivity : ComponentActivity() {
                     TopBar(false, "身份证拍照", navController)
                 }
 
-//            "video" -> {
-//                TopBar(false, "相机录像", navController)
-//            }
+                "video" -> {
+                    TopBar(true, "相机录像", navController)
+                }
+
+                "ocrtext" -> {
+                    TopBar(true, "ocr文字识别", navController)
+                }
 
                 "preview" -> {
                     TopBar(true, "相机预览", navController)
                 }
 
                 "picture" -> {
-                    TopBar(true, "身份证照片", navController)
+                    TopBar(true, "OCR demo", navController)
                 }
             }
 
@@ -125,7 +135,9 @@ class MainActivity : ComponentActivity() {
                     )
 
                 }) {
-                    ScreenMain(previewClick = {
+                    ScreenMain(ocrClick = {
+                        navController.navigate("ocrtext")
+                    }, previewClick = {
                         navController.navigate("preview")
 
                     }, videoClick = {
@@ -189,6 +201,24 @@ class MainActivity : ComponentActivity() {
                     })
                     index = "picture"
                 }
+
+                composable("ocrtext", enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(100)
+                    )
+                }, exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(100)
+                    )
+
+                }) {
+                    OrcScreen()
+                    index = "ocrtext"
+                }
+
+
             }
         }
 
@@ -230,6 +260,9 @@ class MainActivity : ComponentActivity() {
 
     }
 }
+
+
+
 
 
 

@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.example.commonsdk"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 28
         versionCode = 1
         versionName = "1.0"
 
@@ -25,8 +25,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
         create("benchmark") {
@@ -54,6 +53,8 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildToolsVersion = "34.0.0"
+    ndkVersion = "21.4.7075529"
 }
 
 dependencies {
@@ -68,6 +69,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(files("libs/accompanist-navigation-animation-0.34.0.aar"))
     implementation(libs.androidx.profileinstaller)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,19 +79,22 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     var cameraxVersion = "1.2.0-beta01"
-    implementation ("androidx.navigation:navigation-compose:2.7.1")
-    implementation ("androidx.camera:camera-camera2:1.1.0-alpha06")
-    implementation ("androidx.camera:camera-lifecycle:$cameraxVersion")
-    implementation ("androidx.camera:camera-view:$cameraxVersion")
-    implementation ("androidx.camera:camera-core:$cameraxVersion")
-    implementation ("androidx.camera:camera-video:$cameraxVersion")
+    implementation("androidx.navigation:navigation-compose:2.7.1")
+    implementation("androidx.camera:camera-camera2:1.1.0-alpha06")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-video:$cameraxVersion")
 
 //    implementation "androidx.camera:camera-lifecycle:$cameraxVersion"
 //    implementation "androidx.camera:camera-video:$cameraxVersion"
 //    implementation "androidx.camera:camera-view:$cameraxVersion"
 //    implementation "androidx.camera:camera-extensions:$cameraxVersion"
-    implementation ("androidx.activity:activity-compose:1.4.0")
-    implementation ("pub.devrel:easypermissions:3.0.0")
+    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation("pub.devrel:easypermissions:3.0.0")
+    implementation (project(":ocrtext"))
+    implementation ("com.android.support.constraint:constraint-layout:1.1.3")
+    implementation ("com.android.support:appcompat-v7:28.0.0")
 
     //runtimeOnly("com.google.accompanist:accompanist-navigation-animation:0.34.0")
 }
