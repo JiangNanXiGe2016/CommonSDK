@@ -1,4 +1,4 @@
-package com.example.codemodifyplugin
+package com.example.codemodify
 
 import org.junit.Test
 

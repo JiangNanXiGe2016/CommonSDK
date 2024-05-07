@@ -25,3 +25,4 @@ include(":benchmark")
 include(":lint")
 include(":ocrtext")
 
+include(":codemodify")

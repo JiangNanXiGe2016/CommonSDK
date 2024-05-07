@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.baselineprofile)
 }
-
+apply(from = "../jacoco/jacoco.gradle")
 android {
     namespace = "com.example.commonsdk"
     compileSdk = 34
@@ -95,7 +95,8 @@ dependencies {
     implementation (project(":ocrtext"))
     implementation ("com.android.support.constraint:constraint-layout:1.1.3")
     implementation ("com.android.support:appcompat-v7:28.0.0")
+// https://mvnrepository.com/artifact/org.jacoco/org.jacoco.agent
+    testImplementation ("org.jacoco:org.jacoco.agent:0.8.12")
 
-    //runtimeOnly("com.google.accompanist:accompanist-navigation-animation:0.34.0")
 }
 

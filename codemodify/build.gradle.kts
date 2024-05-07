@@ -2,9 +2,9 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 }
-
+apply(from = "../jacoco/jacoco.gradle")
 android {
-    namespace = "com.example.codemodifyplugin"
+    namespace = "com.example.codemodify"
     compileSdk = 34
 
     defaultConfig {
